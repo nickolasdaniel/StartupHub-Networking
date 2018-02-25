@@ -42,5 +42,8 @@ class WebCacheProxy(object):
         self.dict.pop(auxkey)
 
     def get_entry_cache(self, key):
-        pass
-
+        return self.dict[key]
+    
+    def nunmber_of_elements(self,key)
+        return len(self.dict)
+            
