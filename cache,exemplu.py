@@ -66,3 +66,15 @@ if __name__ == '__main__':
             value = ''.join([random.choice(s) for i in range(20)])
             cache.update(key, value)
         print("#%s iterations, #%s cached entries" % (i+1, cache.size))
+        
+        #1 iterations, #1 cached entries
+#2 iterations, #2 cached entries
+#3 iterations, #3 cached entries
+#4 iterations, #4 cached entries
+#5 iterations, #5 cached entries
+#6 iterations, #6 cached entries
+#7 iterations, #7 cached entries
+#8 iterations, #8 cached entries
+#9 iterations, #9 cached entries
+#10 iterations, #10 cached entries
+#11 iterations, #10 cached entries
