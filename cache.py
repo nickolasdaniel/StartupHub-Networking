@@ -9,7 +9,7 @@ class Entry(object):
         self.req_datetime = req_datetime
 
     def __str__(self):
-        return "Content: {} number of bytes: {}".format(self.req_datetime, len(self.content))
+        return "Content: {}\n Number of bytes: {}\n Date: {}\n".format(self.content, len(self.content), self.req_datetime)
 
 
 class WebCacheProxy(object):
@@ -47,7 +47,4 @@ class WebCacheProxy(object):
 
 if __name__ == '__main__':
     e = Entry('http://index.html', datetime.datetime.now())
-    c = WebCacheProxy()
-    c.add_entry_cache('http://www.facebook.com', e)
-
     print(e)
