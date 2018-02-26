@@ -20,14 +20,14 @@ class WebCacheProxy(object):
     def __contains__(self, key):
         return key in self.dict
 
-    def __iter__(self):
-        self.current_entry = -1
-        return self
+#     def __iter__(self):
+#         self.current_entry = -1
+#         return self
 
-    def __next__(self):
-        if self.current_entry >= self.number_of_elements() - 1:
-            raise StopIteration()
-        return list(self.dict.values())[self.current_entry]
+#     def __next__(self):
+#         if self.current_entry >= self.number_of_elements() - 1:
+#             raise StopIteration()
+#         return list(self.dict.values())[self.current_entry]
 
     def add_entry_cache(self, key, value):
         if len(self.dict) >= self.limit and key not in self.dict:
@@ -45,11 +45,11 @@ class WebCacheProxy(object):
 
         del self.dict[auxkey]
 
-    def get_entry_cache(self, key):
-        http_pattern = re.compile("htt[ps]://[a-zA-Z0-9].[a-z]{3} +")
-        if key not in self.dict and http_pattern.search(key) is None:
-            raise KeyError('Request not in cache or doesn`t match the pattern')
-        return self.dict[key]
+#     def get_entry_cache(self, key):
+#         http_pattern = re.compile("htt[ps]://[a-zA-Z0-9].[a-z]{3} +")
+#         if key not in self.dict and http_pattern.search(key) is None:
+#             raise KeyError('Request not in cache or doesn`t match the pattern')
+#         return self.dict[key]
 
     def number_of_elements(self):
         return len(self.dict)
