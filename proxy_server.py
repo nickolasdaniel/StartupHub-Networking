@@ -10,9 +10,13 @@ class Proxy_Server(object):
             self.socket_server1.bind(server_address)
         except socket.error as err:
             print(str(err))
+            
+        self.setsock(self.socket_server1)
+        
         self.socket_server1.listen(5)
-
-        print("connected at {}:{}".format(server_address[0],server_address[1]))
+        
+        
+        print("listen at {}:{}".format(server_address[0],server_address[1]))
 
         self.client_server,self.clent_addr=self.socket_server1.accept()
 
@@ -20,13 +24,18 @@ class Proxy_Server(object):
         self.socket_server2=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.socket_server2.connect(server_address2)
 
-        print("connected at {}:{}".format(server_address2[0],server_address[1]))
+        print("connected at {}:{}".format(server_address2[0],server_address2[1]))
 
         while True:
             try:
                 self.handle(self.socket_server2,self.client_server)
             except KeyboardInterrupt:
                 print("erroare fam")
+                
+    def setsock(self,socket_server1):
+        self.socket_server1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if hasattr(socket, "SO_REUSEPORT"):
+            self.socket_server1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 
     def handle(self,socket_server2,client_server):
         self.MAX_RECV_BUFFER=1024
