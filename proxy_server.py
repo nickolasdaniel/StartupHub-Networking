@@ -51,5 +51,4 @@ class Proxy_Server(object):
             print(str(serr))
 
 if __name__=="__main__":
-    server=Proxy_Server()
-    server.__init__(("127.0.0.1",8080),("127.0.1.1",8081))
+    Proxy_Server(("127.0.0.1",8080),("127.0.1.1",8081))
