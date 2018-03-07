@@ -39,4 +39,4 @@ def recv_all(socket_server):
         print("You left this server")
 
 if __name__=="__main__":
-    init_server(("127.0.0.1",8089))
+    init_server(("127.0.0.1",8081))
