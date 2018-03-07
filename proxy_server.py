@@ -1,7 +1,7 @@
 import socket
 
 class Proxy_Server(object):
-    def __init__(self,server_address):
+    def __init__(self,server_address,server_address2):
         self.server_address=server_address
 
         self.socket_server1=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -9,15 +9,13 @@ class Proxy_Server(object):
             self.socket_server1.bind(server_address)
         except socket.error as err:
             print(str(err))
-          
-        setsock(socket_server)    
         self.socket_server1.listen(5)
 
         self.client_server,self.clent_addr=self.socket_server1.accept()
 
 
         self.socket_server2=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.socket_server2.connect(server_address)
+        self.socket_server2.connect(server_address2)
 
         while True:
             try:
@@ -25,11 +23,6 @@ class Proxy_Server(object):
             except KeyboardInterrupt:
                 print("erroare fam")
 
-     def setsock(self,socket_server):
-         socket_server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT,1)
-         if hasattr(socket,"SO_REUSEPORT"):
-             socket_server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT,1)              
-                
     def handle(self,socket_server2,client_server):
         self.MAX_RECV_BUFFER=1024
         self.data=client_server.recv(self.MAX_RECV_BUFFER)
@@ -57,5 +50,6 @@ class Proxy_Server(object):
         except socket.error as serr:
             print(str(serr))
 
-if __name__=="__main__"
-
+if __name__=="__main__":
+    server=Proxy_Server()
+    server.__init__(("127.0.0.1",8080),("127.0.1.1",8081))
