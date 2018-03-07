@@ -3,6 +3,7 @@ import socket
 class Proxy_Server(object):
     def __init__(self,server_address,server_address2):
         self.server_address=server_address
+        self.server_address2=server_address2
 
         self.socket_server1=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         try:
@@ -29,8 +30,8 @@ class Proxy_Server(object):
 
         if not self.data:
             print("client just disconected")
-            client_server.close()
-            socket_server2.close()
+            self.client_server.close()
+            self.socket_server2.close()
 
         socket_server2.send(self.data)
         print("data send {}".format(self.data))
@@ -51,4 +52,4 @@ class Proxy_Server(object):
             print(str(serr))
 
 if __name__=="__main__":
-    Proxy_Server(("127.0.0.1",8080),("127.0.1.1",8081))
+    Proxy_Server(("127.0.1.1",8081),("127.0.0.1",8089))
