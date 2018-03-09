@@ -13,7 +13,7 @@ class ProxyServer(object):
         self.socket_server1.bind(self.server_address)
         print("[*] Server binded successfully.")
 
-        self.setsock(socket_server1)
+        self.setsock(self.socket_server1)
 
         print("[*] Server is now listening...")
         self.socket_server1.listen(5)
