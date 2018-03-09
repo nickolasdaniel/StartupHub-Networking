@@ -4,12 +4,13 @@ def init_server(server_address):
     socket_server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
     try:
+        print("[*] Client is trying to connect at {}:{}".format(server_address[0], server_address[1]))
         socket_server.connect(server_address)
     except socket.error as serr:
         print("unable to connect {}".format(serr))
         socket_server.close()
 
-    print("just connected at {}:{}".format(server_address[0],server_address[1]))
+    print("[*] Client has successfuly connected at {}:{}".format(server_address[0],server_address[1]))
 
     recv_all(socket_server)
 
@@ -31,12 +32,12 @@ def recv_all(socket_server):
                 command=input("$~")
                 data=""
             elif command=="exit":
-                print("You left this server")
+                print("[*] You left this server")
             else:
-                print("Command {} is not allowed".format(command))
+                print("[*] Command {} is not allowed".format(command))
                 command=input("$~")
     except KeyboardInterrupt as kerr:
-        print("You left this server")
+        print("[*] You left this server")
 
 if __name__=="__main__":
     init_server(("127.0.0.1",8081))
