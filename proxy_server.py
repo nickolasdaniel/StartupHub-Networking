@@ -1,4 +1,5 @@
 import socket
+import time
 
 class ProxyServer(object):
     def __init__(self, server_address, server_address2):
@@ -22,6 +23,7 @@ class ProxyServer(object):
 
         while True:
             self.handle(self.socket_server2, self.client_socket)
+            time.sleep(20)
 
     def handle(self, socket_server2, client_socket):
         self.MAX_RECV_BUFF = 1024
@@ -57,22 +59,6 @@ class ProxyServer(object):
             print("[*] Data has been sent.")
         except socket.error as serr:
             print(serr)
-
-
-    # def recvall(self, client_socket, MAX_RECV_BUFF=1024):
-    #     self.client_socket = client_socket
-    #
-    #     self.MAX_RECV_BUFF = MAX_RECV_BUFF
-    #
-    #     self.total_data = []
-    #     self.data = ""
-    #
-    #     while 1:
-    #         self.data = client_socket.recv(self.MAX_RECV_BUFF)
-    #         self.total_data.append(self.data)
-    #         if len(self.data) < self.MAX_RECV_BUFF:
-    #             break
-    #     return self.total_data
 
 
 if __name__ == "__main__":
