@@ -1,5 +1,4 @@
 import socket
-import time
 
 class ProxyServer(object):
     def __init__(self, server_address, server_address2):
@@ -30,7 +29,7 @@ class ProxyServer(object):
         self.client_socket = client_socket
 
         try:
-            self.data = self.client_socket.recvall(self.client_socket)
+            self.data = self.client_socket.recv(self.MAX_RECV_BUFF)
             print("[*] Received data from client: {}".format(self.data))
 
             if not self.data:
