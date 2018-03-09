@@ -1,5 +1,6 @@
 import socket
 import time
+import pickle
 
 class ProxyServer(object):
     def __init__(self, server_address, server_address2):
@@ -12,6 +13,8 @@ class ProxyServer(object):
         self.socket_server1.bind(self.server_address)
         print("[*] Server binded successfully.")
 
+        self.setsock(socket_server1)
+
         print("[*] Server is now listening...")
         self.socket_server1.listen(5)
 
@@ -23,7 +26,14 @@ class ProxyServer(object):
 
         while True:
             self.handle(self.socket_server2, self.client_socket)
-            time.sleep(20)
+            time.sleep(1)
+
+    def setsock(self,socket_server1):
+        self.socket_server1=socket_server1
+        self.socket_server1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if hasattr(socket, "SO_REUSEPORT"):
+            self.socket_server1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+
 
     def handle(self, socket_server2, client_socket):
         self.MAX_RECV_BUFF = 1024
@@ -31,16 +41,14 @@ class ProxyServer(object):
         self.client_socket = client_socket
 
         try:
-            self.data = self.client_socket.recv(self.MAX_RECV_BUFF)
-            print("[*] Received data from client: {}".format(self.data))
-
+            self.data_string=pickle.dumps(self.recvall(client_socket))
             if not self.data:
                 print("[*] Client just disconnected.")
                 self.socket_server2.close()
                 self.client_socket.close()
 
             print("[*] Sending data to the server...")
-            self.socket_server2.send(self.data)
+            self.socket_server2.send(self.data_string)
             print("[*] Data has been sent.")
         except socket.error as serr:
             print(serr)
@@ -59,6 +67,27 @@ class ProxyServer(object):
             print("[*] Data has been sent.")
         except socket.error as serr:
             print(serr)
+
+
+    def recvall(self, client_socket, MAX_RECV_BUFF=1024):
+        self.client_socket = client_socket
+
+        self.MAX_RECV_BUFF = MAX_RECV_BUFF
+
+        self.total_data=[]
+        self.data=""
+
+        self.recv_size=1
+
+        while self.recv_size:
+            self.data = client_socket.recv(self.MAX_RECV_BUFF)
+            if not len(self.data):
+                break
+            else:
+                self.total_data.append(self.data)
+            self.recv_size=len(self.data)
+            self.data=""
+        return self.total_data
 
 
 if __name__ == "__main__":
