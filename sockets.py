@@ -5,7 +5,9 @@ def init_server(server_address):
     socket_server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
     try:
+        print("[*] Server is trying to bind to address {}:{}".format(server_address[0], server_address[1]))
         socket_server.bind(server_address)
+        print("[*] Server has successfuly binded.")
     except socket.error as serr:
         print(str(serr))
 
@@ -15,16 +17,16 @@ def init_server(server_address):
 
     socket_server.listen(5)
 
-    print("server listen at {}:{}".format(server_address[0],server_address[1]))
+    print("[*] Server listen at {}:{}".format(server_address[0],server_address[1]))
 
     try:
         while True:
             client_socket,client_addr=socket_server.accept()
-            print("client has connected {}:{}".format(client_addr[0],client_addr[1]))
+            print("[*] Client has connected {}:{}".format(client_addr[0],client_addr[1]))
 
             handle(client_socket)
     except KeyboardInterrupt as kerr:
-        print("server is closing...")
+        print("[*] Server is closing...")
         client_socket.close()
         socket_server.close()
 
@@ -39,7 +41,7 @@ def handle(client_socket):
         command=data.decode('utf-8')
 
         if not data:
-            print("client just disconected")
+            print("[*] Client just disconected")
             break
         recv_size=len(data)
 
