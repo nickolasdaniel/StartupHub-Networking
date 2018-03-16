@@ -5,9 +5,8 @@ import os
 class FTPServer(object):
 
     BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    FILENAME = "test"
+    FILENAME = "mata"
     MAX_RECV_SIZE = 1024
-    MAX_SEND_SIZE = 1024
 
     def __init__(self, server_addr=None, backLog=10, setBlocking=False, reuseAddr=True, port = 8080):
         self.port = port
@@ -50,12 +49,14 @@ class FTPServer(object):
         self.client_socket = client_socket
         try:
             self.data = self.client_socket.recv(FTPServer.MAX_RECV_SIZE)
-            print("[*] Received data.")
+
             if not self.data:
                 print("[*] Client is closing...")
                 self.client_socket.close()
                 self.shutdown_server()
             else:
+
+                print("[*] Received data.")
                 self.send_file(self.file_location ,self.client_socket)
                 print("[*] Data has been sent.")
 
@@ -68,22 +69,30 @@ class FTPServer(object):
         self.server_socket.close()
 
     def send_file(self, file_location, client_socket):
+
         self.file_location = file_location
         self.client_socket = client_socket
 
-        if os.path.exists(self.file_location):
+        with open(self.file_location, 'rb') as self.f:
+            self.data1=self.f.read(1024)
 
-            self.file_size = os.path.getsize(self.file_location)
+            self.file_size = os.path.getsize(self.data1)
             self.packer = struct.Struct('I')
             self.packet_data = self.packer.pack(self.file_size)
 
-            try:
-                self.client_socket.send(self.packet_data)
-                with open(self.file_location, 'rb') as f:
-                    self.data = f.read(FTPServer.MAX_SEND_SIZE)
-                    self.client_socket.send(self.data)
-            except IOError:
-                print("[*] Couldn`t send the file.")
+            while self.packet_data:
+
+                try:
+                    client_socket.send(str(self.packet_data))
+                except IOError:
+
+                    print("cant send...")
+                self.packet_data=self.f.read(1024)
+            self.f.close()
+
+
+
+
 
 if __name__ == "__main__":
     ftp = FTPServer()
