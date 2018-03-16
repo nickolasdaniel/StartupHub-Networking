@@ -5,10 +5,7 @@ import struct
 class FTPClient(object):
 
     BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    DEST_FOLDER = BASE_FOLDER + "/" + "testfolder"
-    MAX_SEND_SIZE = 1024
-    MAX_RECV_SIZE = 1024
-    FILENAME = "test"
+    FILENAME = 'mata3'
 
     def __init__(self, server_address):
         self.server_address = server_address
@@ -18,38 +15,24 @@ class FTPClient(object):
         try:
             self.client_socket.connect(self.server_address)
             print("[*] Just connected at {}:{}".format(self.server_address[0], self.server_address[1]))
+            self.download_file(FTPClient.FILENAME)
         except OSError:
             print("[*] Couldn`t connect.")
-            self.send_file_request()
-            self.download_file("test")
-
-    def send_file_request(self):
-        try:
-            self.client_socket.sendall(FTPClient.DEST_FOLDER + FTPClient.FILENAME)
-            print("[*] Request has been sent.")
-        except OSError:
-            print("[*] Couldn`t send request")
-
-
-    def recv_all(self):
-
-        self.total_data=""
-        self.data=""
-
-        self.recv_size=1
-
-        while self.recv_size:
-            self.data = self.client_socket.recv(FTPClient.MAX_RECV_SIZE)
-            if not len(self.data):
-                break
-            else:
-                self.total_data += self.data
-            self.recv_size=len(self.data)
-            self.data=""
-        return self.total_data
 
     def download_file(self, filename):
-
+        with open(filename,'wb') as self.f:
+            print("file opened...")
+            while True:
+                print("reciving data...")
+                self.data = self.client_socket.recv(1024)
+                self.file_size= os.path.getsize(self.data)
+                self.unpacker=struct.Struct('I')
+                self.unpacker_data=self.unpacker.unpack(self.file_size)[0]
+                if not self.unpacker_data:
+                    break
+                self.f.write(self.unpacker_data)
+        self.f.close()
+        self.client_socket.close()
 
 if __name__ == "__main__":
     ftp = FTPClient(("127.0.0.1", 8080))
