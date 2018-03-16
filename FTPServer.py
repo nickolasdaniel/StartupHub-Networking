@@ -80,10 +80,8 @@ class FTPServer(object):
             try:
                 self.client_socket.send(self.packet_data)
                 with open(self.file_location, 'rb') as f:
-                    self.data = 0
-                    while self.data <= self.file_size:
-                        self.client_socket.send(FTPServer.MAX_SEND_SIZE)
-                        self.data += FTPServer.MAX_SEND_SIZE
+                    self.data = f.read(FTPServer.MAX_SEND_SIZE)
+                    self.client_socket.send(self.data)
             except IOError:
                 print("[*] Couldn`t send the file.")
 
