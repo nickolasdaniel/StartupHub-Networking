@@ -54,3 +54,19 @@ class FTPClient(object):
 if __name__ == "__main__":
     ftp = FTPClient(("127.0.0.1", 8080))
     ftp.start_client()
+    
+    
+    
+
+    
+with open('muie','wb') as self.f:
+    while True:
+        print('receiving data...')
+        self.data = s.recv(1024)
+        print('data=%s', format(self.data))
+        if not self.data:
+            break
+        f.write(self.data)
+
+f.close()
+s.close()
