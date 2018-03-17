@@ -1,16 +1,15 @@
+
 import socket
 import struct
 import os
-import sys
-
+import time
 class FTPServer(object):
 
     BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
     FILENAME = "mata"
     MAX_RECV_SIZE = 1024
-    MAX_SEND_SIZE = 1024
 
-    def __init__(self, server_addr=None, backLog=10, setBlocking=False, reuseAddr=True, port = 8080):
+    def __init__(self, server_addr=None, backLog=10, setBlocking=False, reuseAddr=True, port = 8089):
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -47,51 +46,43 @@ class FTPServer(object):
             self.shutdown_server()
 
     def handle(self, client_socket):
+
         self.file_location = FTPServer.BASE_FOLDER + "/" + FTPServer.FILENAME
         self.client_socket = client_socket
-        try:
-            self.data = self.client_socket.recv(FTPServer.MAX_RECV_SIZE)
-
-            if not self.data:
-                print("[*] Client is closing...")
-                self.client_socket.close()
-                self.shutdown_server()
-            else:
-
-                print("[*] Received data.")
-                self.send_file(self.file_location ,self.client_socket)
-                print("[*] Data has been sent.")
-
-        except IOError:
-            print("[*] Error")
+        self.send_file(self.file_location ,self.client_socket)
+        print("[*] Data has been sent.")
+        self.shutdown_server()
 
     def shutdown_server(self):
         print("[*] Server is closing...")
         self.active_server = False
+        time.sleep(6)
         self.server_socket.close()
 
     def send_file(self, file_location, client_socket):
 
         self.file_location = file_location
+        print(file_location)
         self.client_socket = client_socket
-        
-        if os.path.exists(self.file_location):
+
+        self.size=0
+        with open(self.file_location,'rb') as f:
+
             self.file_size = os.path.getsize(self.file_location)
             self.packer = struct.Struct('I')
             self.packet_data = self.packer.pack(self.file_size)
-            try:
+
+            while self.size<self.file_size:
+                self.data=f.read(1024)
+                self.size+=1024
+                self.client_socket.send(self.data)
                 self.client_socket.send(self.packet_data)
-                with open(self.file_location, 'rb') as self.f:
-                    self.data = 0
-                    self.read = self.f.read(FTPClient.MAX_SEND_SIZE)
-                    while self.data <= self.file_size:
-                        self.client_socket.send(self.read)
-                        self.data += FTPClient.MAX_SEND_SIZE
-            except IOError as ierr:
-                sys.exit(1)
-          else:
-            self.client_socket.send("No such file!".encode("utf-8"))
-                    
+                print(self.data)
+        client_socket.close()
+
+
+
+
 if __name__ == "__main__":
     ftp = FTPServer()
     ftp.start_server()
