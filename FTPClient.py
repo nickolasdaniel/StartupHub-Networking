@@ -1,11 +1,13 @@
 import socket
 import os
 import struct
+import sys 
 
 class FTPClient(object):
 
-    BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
+    DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__))
     FILENAME = 'mata3'
+    MAX_RECV_SIZE = 1024
 
     def __init__(self, server_address):
         self.server_address = server_address
@@ -20,17 +22,25 @@ class FTPClient(object):
             print("[*] Couldn`t connect.")
 
     def download_file(self, filename):
-        with open(filename,'wb') as self.f:
-            print("file opened...")
-            while True:
-                print("reciving data...")
-                self.data = self.client_socket.recv(1024)
-                self.file_size= os.path.getsize(self.data)
-                self.unpacker=struct.Struct('I')
-                self.unpacker_data=self.unpacker.unpack(self.file_size)[0]
-                if not self.unpacker_data:
-                    break
-                self.f.write(self.unpacker_data)
+        self.unpacker = struct.Struct("I")
+        self.file_size = unpacker.unpack(self.client_socket.recv(self.unpacker.size))[0]
+        if os.path.exists(FTPClient.DOWNLOAD_FOLDER):
+            self.file_location = FTPClient.DOWNLOAD_FOLDER + filename
+            with open(filename,'wb') as self.f:
+                print("[*] File has been created...")
+                self.recv_len = 0
+                try:
+                    while self.recv_len <= self.file_size:
+                        self.data = self.client_server.recv(FTPClient.MAX_RECV_SIZE)
+                        self.f.write(self.data)
+                        self.recv_len += len(self.file_data)
+                except IOError as ierr:
+                    sys.exit(1)
+                 print("File: {} Bytes: {} was succesfuly downloaded".format(filename, self.file_size))
+         else:
+            self.client_socket.send("Download location doesn`t exist!")
+                    
+            
         self.f.close()
         self.client_socket.close()
 
