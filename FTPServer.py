@@ -1,12 +1,14 @@
 import socket
 import struct
 import os
+import sys
 
 class FTPServer(object):
 
     BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
     FILENAME = "mata"
     MAX_RECV_SIZE = 1024
+    MAX_SEND_SIZE = 1024
 
     def __init__(self, server_addr=None, backLog=10, setBlocking=False, reuseAddr=True, port = 8080):
         self.port = port
@@ -72,28 +74,24 @@ class FTPServer(object):
 
         self.file_location = file_location
         self.client_socket = client_socket
-
-        with open(self.file_location, 'rb') as self.f:
-            self.data1=self.f.read(1024)
-
-            self.file_size = os.path.getsize(self.data1)
+        
+        if os.path.exists(self.file_location):
+            self.file_size = os.path.getsize(self.file_location)
             self.packer = struct.Struct('I')
             self.packet_data = self.packer.pack(self.file_size)
-
-            while self.packet_data:
-
-                try:
-                    client_socket.send(str(self.packet_data))
-                except IOError:
-
-                    print("cant send...")
-                self.packet_data=self.f.read(1024)
-            self.f.close()
-
-
-
-
-
+            try:
+                self.client_socket.send(self.packet_data)
+                with open(self.file_location, 'rb') as self.f:
+                    self.data = 0
+                    self.read = self.f.read(FTPClient.MAX_SEND_SIZE)
+                    while self.data <= self.filesize:
+                        self.client_socket.send(self.read)
+                        self.data += FTPClient.MAX_SEND_SIZE
+            except IOError as ierr:
+                sys.exit(1)
+          else:
+            self.client_socket.send("No such file!".encode("utf-8"))
+                    
 if __name__ == "__main__":
     ftp = FTPServer()
     ftp.start_server()
