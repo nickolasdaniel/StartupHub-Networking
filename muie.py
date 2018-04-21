@@ -26,7 +26,6 @@ class Server(object):
 
         if resueAddr:
             self.socket_server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-            self.socket_server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEPORT,1)
 
         self.socket_server.listen(10)
 
