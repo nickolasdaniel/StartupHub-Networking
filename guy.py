@@ -61,6 +61,7 @@ class relee:
 
 
 root = Tk()
+root.attributes('-fullscreen', True)
 p = password(root)
 RL = relee(7, root)
 
