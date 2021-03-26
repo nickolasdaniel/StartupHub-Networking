@@ -26,7 +26,7 @@ class WebServer(object):
 HTTP/1.1 200 OK
 
 Hello, World!
-Benzi sugi pula am facut web server !
+
 """
             client_connection.sendall(http_response.encode("utf-8"))
             client_connection.close()
