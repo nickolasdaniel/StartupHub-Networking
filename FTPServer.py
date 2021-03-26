@@ -6,7 +6,7 @@ import time
 class FTPServer(object):
 
     BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
-    FILENAME = "mata"
+    FILENAME = "file"
     MAX_RECV_SIZE = 1024
 
     def __init__(self, server_addr=None, backLog=10, setBlocking=False, reuseAddr=True, port = 8089):
