@@ -80,5 +80,3 @@ class Server(object):
                     if socket in self.inputs:
                         self.inputs.remove(message)
 '''
-if __name__=="__main__":
-    pizda lu diana todo
