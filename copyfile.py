@@ -9,7 +9,7 @@ def copyfile():
             lines = f1.read(1024)
         print("Avem fisierul pe care vrem sa-l copiem")
 
-        with open(BASE_FOLDER + '/' + DEST_FOLDER + '/' + "muitsa", 'wb') as f2:
+        with open(BASE_FOLDER + '/' + DEST_FOLDER + '/' + "file", 'wb') as f2:
             f2.write(lines)
             print("Am copiat fisierul cu success!")
     except:
