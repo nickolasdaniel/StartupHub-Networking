@@ -62,7 +62,7 @@ class ProxyServer(object):
             while True:
                 self.handle_client(socket_server)
         except KeyboardInterrupt:
-            print("you left this server...MUIE")
+            print("you left this server...")
             socket_server.close()
     def handle_client(self,socket_server):
         self.MAX_BUFFER=1024
